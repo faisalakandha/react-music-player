@@ -10,7 +10,10 @@
   "author": "Peter Coles",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.2",
+    "express": "^4.17.1",
+    "helmet": "^5.0.2",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
