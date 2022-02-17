@@ -1,57 +1,49 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Header from './Header';
+import ItemsList from './ItemsList';
+import { itunesApiRequest} from './utils';
+import styled, { createGlobalStyle } from 'styled-components';
+import Palette from './palette';
 
-import logo from './logo.svg';
-
-import './App.scss';
-
-class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {};
+const GlobalStyle = createGlobalStyle`
+  html, body {
+    height: 100%;
+    width: 100%;
+		margin: 0;
+		background-color: ${Palette('Grey', 800)};
   }
+`;
 
-  componentDidMount() {
-    this.callApi()
-      .then(res => this.setState(res))
-      .catch(console.error);
-  }
+const Content = styled.div`
+	width: 100%;
+	height: 100%;
+`;
 
-  callApi = async () => {
-    const resp = await fetch('/api');
+class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { searchResults: [] };
+		this.updateSearch = this.updateSearch.bind(this);
+	}
 
-    window._resp = resp;
+	async updateSearch(text) {
+		const response = await itunesApiRequest(text);
+		this.setState({ searchResults: response.results });
+	}
 
-    let text = await resp.text();
-
-    let data = null;
-    try {
-      data = JSON.parse(text); // cannot call both .json and .text - await resp.json();
-    } catch (e) {
-      console.err(`Invalid json\n${e}`);
-    }
-
-    if (resp.status !== 200) {
-      throw Error(data ? data.message : 'No data');
-    }
-
-    return data;
-  };
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          iTunes Music App
-        </p>
-        <p>{this.state.message || 'No message'}</p>
-      </div>
-    );
-  }
+	render() {
+		const { searchResults } = this.state;
+		return (
+			<>
+				<GlobalStyle />
+				<Content>
+					<Header startSearch={this.updateSearch} />
+					<ItemsList items={searchResults} />
+				</Content>
+			</>
+		);
+	}
 }
 
 export default App;
