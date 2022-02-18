@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Palette from './palette';
+import { Link } from "react-router-dom";
 
 const Card = styled.div`
 	height: 200px;
@@ -24,7 +25,8 @@ const CardText = styled.div`
 	text-overflow: ellipsis;
 `;
 
-const Item = ({ kind, artistName, trackName, artworkUrl100 }) => (
+const Item = ({ kind, artistName, trackName, artworkUrl100, trackId }) => (
+	<Link to={`/track/${trackId}`}>
 	<Card>
 		<div>{kind}</div>
 		<CardText>{artistName}</CardText>
@@ -33,6 +35,7 @@ const Item = ({ kind, artistName, trackName, artworkUrl100 }) => (
 			<img src={artworkUrl100} />
 		</div>
 	</Card>
-);
+	</Link>
 
+);
 export default Item;
